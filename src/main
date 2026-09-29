@@ -1,3 +1,50 @@
+import sys
+import os
+import sqlite3
+import pandas as pd
+from pybaseball import standings
+from pybaseball import team_batting
 # goes through the year that you want
 # eventually will be able to compare years
 # like take for example 2025 and 2024 and see how they compare
+
+#connection to SQL db
+connection = sqlite3.connect("data/mlb.db")
+
+def rate_team(win_percentage):
+
+    if win_percentage > 0.599:
+        return "Excellent"
+
+    elif win_percentage > 0.550:
+        return "Good"
+
+    elif win_percentage > 0.500:
+        return "Average"
+
+    else:
+        return "Below Average"
+
+#print each to check the output
+
+print(rate_team(0.610))
+print(rate_team(0.575))
+print(rate_team(0.520))
+print(rate_team(0.400))
+
+# get the connection that I will play with 
+cursor = connection.cursor()
+cursor.execute("""
+    SELECT Tm,W, L, Win_Percentage
+    FROM team_records
+""")
+
+
+teams = cursor.fetchall()
+# print used just to check 
+#print(teams)
+
+for team,wins,losses, win_percentage in teams:
+    rating = rate_team(win_percentage)
+    # print(teams)
+    print(f"{team} - {wins} wins - {rating}")
