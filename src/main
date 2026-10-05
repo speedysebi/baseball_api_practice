@@ -4,6 +4,9 @@ import sqlite3
 import pandas as pd
 from pybaseball import standings
 from pybaseball import team_batting
+import tkinter as tk
+from tkinter import ttk
+
 # goes through the year that you want
 # eventually will be able to compare years
 # like take for example 2025 and 2024 and see how they compare
@@ -48,3 +51,20 @@ for team,wins,losses, win_percentage in teams:
     rating = rate_team(win_percentage)
     # print(teams)
     print(f"{team} - {wins} wins - {rating}")
+
+# set up the javafx but python
+root = tk.Tk()
+root.title("MLB analysis")
+root.geometry("500x400")
+
+# labels
+year_label = tk.Label(root, text="Select Year:")
+year_label.pack()
+
+# range
+years = connection(range(2000, 2026))
+
+print(years)
+
+year_dropdown = ttk.Combobox(root, values=years)
+year_dropdown.pack()
