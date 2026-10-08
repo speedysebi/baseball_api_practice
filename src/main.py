@@ -62,9 +62,60 @@ year_label = tk.Label(root, text="Select Year:")
 year_label.pack()
 
 # range
-years = connection(range(2000, 2026))
+years = list(range(2025, 1999, -1))
 
-print(years)
+# just commendted out for now
+#print(years)
 
-year_dropdown = ttk.Combobox(root, values=years)
+year_dropdown = ttk.Combobox(
+    root, 
+    values=years,
+    state="readonly"
+    )
 year_dropdown.pack()
+
+year_dropdown.set(2025)
+
+
+def analyze_year():
+    selected_year = year_dropdown.get()
+    print(f"Selected year: {selected_year}")
+
+analyze_button = tk.Button(
+    root,
+    text="Analyze",
+    command=analyze_year
+)
+
+analyze_button.pack()
+
+root.mainloop()
+
+def season_exists(year):
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        SELECT 1
+        FROM team_records
+        WHERE Season = ?
+        LIMIT 1
+        """,
+        (year,)
+
+    )
+
+    result = cursor.fetchone()
+    return result is not None
+    print(season_exists(connection,2025))
+    print(season_exists(connection,2024))
+
+def analyze_year():
+
+    selected_year = int(year_dropdown.get())
+    if season_exists(connection, selected_year):
+        print(f"Season {selected_year} is already in the database")
+    else:
+        print(f"Season {selected_year} is not in the database")
+
+
